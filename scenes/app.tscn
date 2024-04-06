@@ -1,34 +1,29 @@
-[gd_scene load_steps=14 format=3 uid="uid://bpwvs0fqynymh"]
+[gd_scene load_steps=19 format=3 uid="uid://bpwvs0fqynymh"]
 
 [ext_resource type="Script" path="res://scripts/app.gd" id="1_6jxrq"]
 [ext_resource type="FontVariation" uid="uid://ba68foa65lv2j" path="res://resources/regular.tres" id="1_56sw4"]
 [ext_resource type="Script" path="res://scripts/game_picker.gd" id="2_jdjj0"]
-[ext_resource type="Shader" path="res://resources/menu_bg.gdshader" id="3_7bucv"]
+[ext_resource type="Shader" path="res://content/shaders/blur_bg.gdshader" id="3_7bucv"]
 [ext_resource type="FontVariation" uid="uid://dks55vxe771j8" path="res://resources/title.tres" id="4_6pufx"]
-[ext_resource type="FontVariation" uid="uid://ca6igtx8kasfr" path="res://resources/bold_bg.tres" id="6_ab81d"]
-[ext_resource type="Shader" path="res://resources/glob.gdshader" id="7_6wcsf"]
+[ext_resource type="Shader" path="res://content/shaders/fading_bg.gdshader" id="4_s1b5k"]
+[ext_resource type="Script" path="res://scripts/fading_bg.gd" id="5_guc0b"]
+[ext_resource type="FontVariation" uid="uid://ca6igtx8kasfr" path="res://resources/bold.tres" id="6_ab81d"]
+[ext_resource type="Shader" path="res://content/shaders/glob_bg.gdshader" id="7_6wcsf"]
+[ext_resource type="Script" path="res://scripts/marquee.gd" id="7_gid56"]
 [ext_resource type="Script" path="res://scripts/spin_material_color.gd" id="8_fpviy"]
 
 [sub_resource type="Theme" id="Theme_kcgoo"]
 default_font = ExtResource("1_56sw4")
 RichTextLabel/fonts/bold_font = ExtResource("6_ab81d")
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2657p"]
+shader = ExtResource("4_s1b5k")
+shader_parameter/fade = 0.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_u7eni"]
 shader = ExtResource("3_7bucv")
 shader_parameter/blur_amount = 4.0
 shader_parameter/gray_amount = 0.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ag1py"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0, 0, 0, 1)
-draw_center = false
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rn57h"]
 shader = ExtResource("7_6wcsf")
@@ -48,6 +43,31 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 8
 border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0qm8p"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 8
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cro2k"]
+bg_color = Color(0.841949, 0, 0.444938, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.841949, 0, 0.444938, 0)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -74,19 +94,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Background" type="TextureRect" parent="Menu"]
+[node name="Background" type="ColorRect" parent="Menu"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Fallback" type="ColorRect" parent="Menu/Background"]
-show_behind_parent = true
+material = SubResource("ShaderMaterial_2657p")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -94,6 +104,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.226707, 0.226707, 0.226707, 1)
+script = ExtResource("5_guc0b")
+fade_speed = 2.0
+
+[node name="Switch BG Timer" type="Timer" parent="Menu/Background"]
+wait_time = 5.0
+autostart = true
 
 [node name="Blur" type="ColorRect" parent="Menu"]
 material = SubResource("ShaderMaterial_u7eni")
@@ -111,14 +127,16 @@ anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 16.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 0
 
 [node name="Game Picker Container" type="Control" parent="Menu/Box"]
 custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 
-[node name="Game Picker" type="BoxContainer" parent="Menu/Box/Game Picker Container"]
+[node name="Game Picker" type="Control" parent="Menu/Box/Game Picker Container"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -128,40 +146,53 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_jdjj0")
 
-[node name="PanelContainer" type="PanelContainer" parent="Menu/Box"]
-custom_minimum_size = Vector2(600, 0)
+[node name="Spacer" type="Control" parent="Menu/Box"]
+custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_ag1py")
 
-[node name="Info" type="VBoxContainer" parent="Menu/Box/PanelContainer"]
+[node name="Info" type="VBoxContainer" parent="Menu/Box"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+size_flags_vertical = 3
 
-[node name="Title" type="Label" parent="Menu/Box/PanelContainer/Info"]
+[node name="Title" type="Label" parent="Menu/Box/Info"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_6pufx")
 theme_override_font_sizes/font_size = 64
-text = "Poultry Pounders"
+text = "Game Title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="About" type="RichTextLabel" parent="Menu/Box/PanelContainer/Info"]
+[node name="About" type="RichTextLabel" parent="Menu/Box/Info"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
 theme_override_constants/line_separation = 0
 theme_override_font_sizes/normal_font_size = 24
 bbcode_enabled = true
-text = "[center](Multiplayer)[/center]
+text = "[center](Tag)[/center]
 
-Platform Fighter made in 5 days for Gamfication 2023"
+Game Description..."
 fit_content = true
 scroll_active = false
 
+[node name="Credits" type="Control" parent="Menu/Box"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(184, 21)
+layout_mode = 2
+size_flags_vertical = 8
+script = ExtResource("7_gid56")
+delay = 0.0
+duration = 30.0
+lines = Array[String](["Hello World How Are You?", ""])
+
 [node name="Help" type="Control" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -182,7 +213,7 @@ script = ExtResource("8_fpviy")
 speed = 0.033
 lightness = 0.05
 
-[node name="CenterContainer" type="CenterContainer" parent="Help"]
+[node name="Center" type="CenterContainer" parent="Help"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -191,11 +222,11 @@ offset_bottom = -100.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Box" type="VBoxContainer" parent="Help/CenterContainer"]
+[node name="Box" type="VBoxContainer" parent="Help/Center"]
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="Help Title" type="Label" parent="Help/CenterContainer/Box"]
+[node name="Help Title" type="Label" parent="Help/Center/Box"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
@@ -205,17 +236,17 @@ text = "How to play [Game Name]"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Panel" type="PanelContainer" parent="Help/CenterContainer/Box"]
+[node name="Panel" type="PanelContainer" parent="Help/Center/Box"]
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_gubh6")
 
-[node name="Box" type="VBoxContainer" parent="Help/CenterContainer/Box/Panel"]
+[node name="Box" type="VBoxContainer" parent="Help/Center/Box/Panel"]
 layout_mode = 2
 
-[node name="Help Text" type="RichTextLabel" parent="Help/CenterContainer/Box/Panel/Box"]
+[node name="Help Text" type="RichTextLabel" parent="Help/Center/Box/Panel/Box"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -232,10 +263,58 @@ fit_content = true
 scroll_active = false
 tab_size = 24
 
-[node name="Label" type="RichTextLabel" parent="Help/CenterContainer/Box/Panel/Box"]
+[node name="Help Prompt" type="RichTextLabel" parent="Help/Center/Box/Panel/Box"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_horizontal = 4
+size_flags_vertical = 4
 bbcode_enabled = true
-text = "[center][pulse]Press [b]Minus[/b] to start/stop playing"
+text = "[pulse]Press [b]Plus[/b] to start/stop playing"
 fit_content = true
 scroll_active = false
+autowrap_mode = 0
+
+[node name="Quit Bar" type="ProgressBar" parent="Help/Center/Box"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(192, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_0qm8p")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cro2k")
+max_value = 10.0
+value = 5.0
+show_percentage = false
+
+[node name="Label" type="RichTextLabel" parent="Help/Center/Box/Quit Bar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.5
+offset_top = -10.5
+offset_right = 67.5
+offset_bottom = 10.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("6_ab81d")
+theme_override_fonts/bold_font = ExtResource("6_ab81d")
+bbcode_enabled = true
+text = "Hold [b]Plus[/b] to quit"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Overlay Label" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+offset_right = 149.0
+offset_bottom = 21.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.2)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 12
+text = "Game Name MM:SS"
+
+[connection signal="timeout" from="Menu/Background/Switch BG Timer" to="Menu/Box/Game Picker Container/Game Picker" method="switch_bg"]

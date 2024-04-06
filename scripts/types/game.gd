@@ -42,7 +42,8 @@ static func from_disk(path: String) -> Game:
 	# Load credits
 	var credits_path := str(path,"credits.txt")
 	if FileAccess.file_exists(credits_path):
-		game.credits.assign(FileAccess.get_file_as_string(credits_path).split("\n"))
+		game.credits.assign(FileAccess.get_file_as_string(credits_path).strip_edges().split("\n"))
+		game.credits.shuffle()
 	
 	# Load help
 	var help_path := str(path,"help.txt")
@@ -66,12 +67,11 @@ static func from_dict(dict: Dictionary) -> Game:
 	var game := Game.new()
 	
 	game.title = dict.get("title", "")
-	game.date = dict.get("date", "")
 	
 	game.continue_playing_menu_music = dict.get("continue_playing_menu_music", false)
 	
-	game.executable = dict.get("executable", "")
-	game.arguments.assign(dict.get("arguments", []))
+	game.exec = dict.get("exec", "")
+	game.args.assign(dict.get("args", []))
 	
 	return game
 
@@ -80,7 +80,6 @@ var id := &""
 var directory := ""
 
 var title := ""
-var date := ""
 var about := ""
 var credits: Array[String] = []
 var help := ""
@@ -90,5 +89,5 @@ var continue_playing_menu_music := false
 var cover_texture: Texture2D
 var screenshot_textures: Array[Texture2D] = []
 
-var executable := ""
-var arguments: Array[String] = []
+var exec := ""
+var args: Array[String] = []
