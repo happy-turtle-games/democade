@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpwvs0fqynymh"]
+
+[ext_resource type="Script" path="res://scripts/app.gd" id="1_6jxrq"]
+[ext_resource type="Script" path="res://scripts/game_picker.gd" id="2_jdjj0"]
+
+[node name="App" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_6jxrq")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.223103, 0.223103, 0.223103, 1)
+
+[node name="Box" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Game Picker Container" type="Control" parent="Box"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+
+[node name="Game Picker" type="BoxContainer" parent="Box/Game Picker Container"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_jdjj0")
+
+[node name="Info" type="VBoxContainer" parent="Box"]
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Title" type="Label" parent="Box/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Poultry Pounders"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Description" type="RichTextLabel" parent="Box/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/line_separation = 0
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[center](Multiplayer)[/center]
+Platform Fighter made in 5 days for Gamfication 2023"
+fit_content = true
+scroll_active = false
