@@ -24,8 +24,11 @@ gdscript/warnings/enable=false
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/mode=3
+window/size/always_on_top=true
+window/size/transparent=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/per_pixel_transparency/allowed=true
 
 [editor]
 
@@ -35,6 +38,7 @@ naming/node_name_num_separator=1
 
 folder_colors={
 "res://content/": "red",
+"res://resources/": "blue",
 "res://scenes/": "yellow",
 "res://scripts/": "green"
 }
@@ -100,3 +104,4 @@ renderer/rendering_method="mobile"
 textures/default_filters/anisotropic_filtering_level=0
 textures/decals/filter=0
 textures/light_projectors/filter=0
+viewport/transparent_background=true

@@ -4,6 +4,11 @@ class_name GamePicker extends Control
 const GAME_BUTTON_SCENE: PackedScene = preload('res://scenes/game_button.tscn')
 
 
+@onready var title: Label = %"Title"
+@onready var about: RichTextLabel = %"About"
+@onready var background: TextureRect = %"Background"
+
+
 var index := 0
 var selected_button: GameButton
 
@@ -44,3 +49,8 @@ func update_selected() -> void:
 	index = wrapi(index, 0, GameDB.games.size())
 	selected_button = get_child(index)
 	selected_button.set_selected(true)
+	
+	var game := selected_button.game
+	title.text = game.title
+	about.text = game.about
+	background.texture = game.screenshot_textures.pick_random()
