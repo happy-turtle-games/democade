@@ -5,6 +5,7 @@ const CONFIG_PATH := 'user://config.json'
 
 
 static var games_path := "user://games/"
+static var music_path := "user://music/"
 
 
 static func _static_init() -> void:
@@ -14,3 +15,4 @@ static func _static_init() -> void:
 	
 	var dict: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	games_path = dict.get("games_path", games_path)
+	music_path = dict.get("music_path", music_path)

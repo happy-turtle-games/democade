@@ -15,6 +15,7 @@ static var current: App
 @onready var help_prompt: CanvasItem = %"Help Prompt"
 @onready var quit_bar: ProgressBar = %"Quit Bar"
 @onready var overlay_label: Label = %"Overlay Label"
+@onready var music_player: MusicPlayer = %"Music Player"
 
 
 var game: Game
@@ -41,12 +42,6 @@ func _ready() -> void:
 	overlay_label.hide()
 
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		print("About to quit, killing process")
-		stop_game()
-
-
 func _process(delta: float) -> void:
 	is_game_running = OS.is_process_running(game_pid)
 	
@@ -67,6 +62,7 @@ func _process_inactive(delta: float) -> void:
 	
 	# Help Menu close/quit
 	if not is_help_open and Input.is_action_just_pressed(&"menu_home"):
+			%"SFX Open".play()
 			open_help()
 			help_prompt.hide()
 			quit_bar.show()
@@ -80,6 +76,7 @@ func _process_inactive(delta: float) -> void:
 			is_opening_help = false
 		else:
 			close_help()
+			%"SFX Close".play()
 	
 	if Input.is_action_pressed(&'menu_home') and is_help_open:
 		quit_timer += delta
@@ -96,6 +93,7 @@ func _process_inactive(delta: float) -> void:
 
 
 func launch_game(game: Game) -> void:
+	%"SFX Start".play()
 	overlay_label.show()
 	game_uptime = 0.0
 	self.game = game
@@ -115,6 +113,7 @@ func launch_game(game: Game) -> void:
 
 
 func stop_game() -> void:
+	%"SFX Quit".play()
 	print("Stopping game ",overlay_label.text)
 	overlay_label.hide()
 	set_active(true)
@@ -127,6 +126,7 @@ func set_active(active: bool) -> void:
 	if self.active == active: return
 	self.active = active
 	menu.visible = active
+	music_player.muted = not active and not game.continue_playing_menu_music
 
 
 func open_help() -> void:

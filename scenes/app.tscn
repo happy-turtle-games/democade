@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bpwvs0fqynymh"]
+[gd_scene load_steps=26 format=3 uid="uid://bpwvs0fqynymh"]
 
 [ext_resource type="Script" path="res://scripts/app.gd" id="1_6jxrq"]
 [ext_resource type="FontVariation" uid="uid://ba68foa65lv2j" path="res://resources/regular.tres" id="1_56sw4"]
@@ -6,11 +6,18 @@
 [ext_resource type="Shader" path="res://content/shaders/blur_bg.gdshader" id="3_7bucv"]
 [ext_resource type="FontVariation" uid="uid://dks55vxe771j8" path="res://resources/title.tres" id="4_6pufx"]
 [ext_resource type="Shader" path="res://content/shaders/fading_bg.gdshader" id="4_s1b5k"]
+[ext_resource type="Script" path="res://scripts/music_player.gd" id="4_s6012"]
+[ext_resource type="AudioStream" uid="uid://s6bvf5flp2kh" path="res://content/sound/nav_left.wav" id="5_f2v5b"]
 [ext_resource type="Script" path="res://scripts/fading_bg.gd" id="5_guc0b"]
 [ext_resource type="FontVariation" uid="uid://ca6igtx8kasfr" path="res://resources/bold.tres" id="6_ab81d"]
+[ext_resource type="AudioStream" uid="uid://b0sh174frfo7s" path="res://content/sound/nav_right.wav" id="6_s5qns"]
+[ext_resource type="AudioStream" uid="uid://brxionghdy7xv" path="res://content/sound/start.wav" id="7_2avyd"]
 [ext_resource type="Shader" path="res://content/shaders/glob_bg.gdshader" id="7_6wcsf"]
 [ext_resource type="Script" path="res://scripts/marquee.gd" id="7_gid56"]
 [ext_resource type="Script" path="res://scripts/spin_material_color.gd" id="8_fpviy"]
+[ext_resource type="AudioStream" uid="uid://bhgcad2a0th72" path="res://content/sound/quit.wav" id="8_gfdwv"]
+[ext_resource type="AudioStream" uid="uid://cex1esptns2rs" path="res://content/sound/open.wav" id="9_mrlho"]
+[ext_resource type="AudioStream" uid="uid://cuufo8oxefp0p" path="res://content/sound/close.wav" id="10_atldo"]
 
 [sub_resource type="Theme" id="Theme_kcgoo"]
 default_font = ExtResource("1_56sw4")
@@ -84,6 +91,39 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = SubResource("Theme_kcgoo")
 script = ExtResource("1_6jxrq")
+
+[node name="Music Player" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"BGM"
+script = ExtResource("4_s6012")
+fade_in_speed = 40.0
+fade_out_speed = 10.0
+
+[node name="SFX Nav Left" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("5_f2v5b")
+volume_db = -10.0
+
+[node name="SFX Nav Right" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("6_s5qns")
+volume_db = -10.0
+
+[node name="SFX Start" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("7_2avyd")
+
+[node name="SFX Quit" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("8_gfdwv")
+
+[node name="SFX Open" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("9_mrlho")
+
+[node name="SFX Close" type="AudioStreamPlayer" parent="Music Player"]
+unique_name_in_owner = true
+stream = ExtResource("10_atldo")
 
 [node name="Menu" type="Control" parent="."]
 unique_name_in_owner = true
@@ -312,7 +352,7 @@ unique_name_in_owner = true
 layout_mode = 1
 offset_right = 149.0
 offset_bottom = 21.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.2)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.333)
 theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 12
 text = "Game Name MM:SS"

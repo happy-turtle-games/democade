@@ -16,7 +16,7 @@ const GAME_BUTTON_SCENE: PackedScene = preload('res://scenes/game_button.tscn')
 var index := 0
 var selected_button: GameButton
 
-var button_offset := 0.0
+var button_offset := 10.0
 
 
 func _ready() -> void:
@@ -30,7 +30,8 @@ func _ready() -> void:
 		button_offset += game_button.size.x
 		button_offset += spacing
 	
-	update_selected()
+	if GameDB.games.size() > 0:
+		update_selected()
 
 
 func _process(delta: float) -> void:
@@ -41,10 +42,12 @@ func _process(delta: float) -> void:
 		return
 	
 	if Input.is_action_just_pressed(&"menu_left"):
+		%"SFX Nav Left".play()
 		index -= 1
 		update_selected()
 	
 	if Input.is_action_just_pressed(&"menu_right"):
+		%"SFX Nav Right".play()
 		index += 1
 		update_selected()
 	
