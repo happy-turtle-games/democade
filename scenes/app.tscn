@@ -1,10 +1,11 @@
-[gd_scene load_steps=26 format=3 uid="uid://bpwvs0fqynymh"]
+[gd_scene load_steps=27 format=3 uid="uid://bpwvs0fqynymh"]
 
 [ext_resource type="Script" path="res://scripts/app.gd" id="1_6jxrq"]
 [ext_resource type="FontVariation" uid="uid://ba68foa65lv2j" path="res://resources/regular.tres" id="1_56sw4"]
-[ext_resource type="Script" path="res://scripts/game_picker.gd" id="2_jdjj0"]
+[ext_resource type="FontVariation" uid="uid://dv4og52wnxil5" path="res://resources/bold_italic.tres" id="2_7pgkc"]
+[ext_resource type="Script" path="res://scripts/launcher.gd" id="2_jdjj0"]
 [ext_resource type="Shader" path="res://content/shaders/blur_bg.gdshader" id="3_7bucv"]
-[ext_resource type="FontVariation" uid="uid://dks55vxe771j8" path="res://resources/title.tres" id="4_6pufx"]
+[ext_resource type="FontVariation" uid="uid://bpg8vouq53pdm" path="res://resources/italic.tres" id="3_jdhj6"]
 [ext_resource type="Shader" path="res://content/shaders/fading_bg.gdshader" id="4_s1b5k"]
 [ext_resource type="Script" path="res://scripts/music_player.gd" id="4_s6012"]
 [ext_resource type="AudioStream" uid="uid://s6bvf5flp2kh" path="res://content/sound/nav_left.wav" id="5_f2v5b"]
@@ -22,6 +23,9 @@
 [sub_resource type="Theme" id="Theme_kcgoo"]
 default_font = ExtResource("1_56sw4")
 RichTextLabel/fonts/bold_font = ExtResource("6_ab81d")
+RichTextLabel/fonts/bold_italics_font = ExtResource("2_7pgkc")
+RichTextLabel/fonts/italics_font = ExtResource("3_jdhj6")
+RichTextLabel/fonts/normal_font = ExtResource("1_56sw4")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2657p"]
 shader = ExtResource("4_s1b5k")
@@ -94,38 +98,48 @@ script = ExtResource("1_6jxrq")
 
 [node name="Music Player" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+volume_db = -80.0
 bus = &"BGM"
 script = ExtResource("4_s6012")
-fade_in_speed = 40.0
-fade_out_speed = 10.0
+fade_in_speed = 0.5
+fade_out_speed = 0.5
 
 [node name="SFX Nav Left" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("5_f2v5b")
-volume_db = -10.0
+volume_db = -30.0
+bus = &"SFX"
 
 [node name="SFX Nav Right" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("6_s5qns")
-volume_db = -10.0
+volume_db = -30.0
+bus = &"SFX"
 
 [node name="SFX Start" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("7_2avyd")
+bus = &"SFX"
 
 [node name="SFX Quit" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("8_gfdwv")
+volume_db = -12.0
+bus = &"SFX"
 
 [node name="SFX Open" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("9_mrlho")
+volume_db = -12.0
+bus = &"SFX"
 
 [node name="SFX Close" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("10_atldo")
+volume_db = -10.0
+bus = &"SFX"
 
-[node name="Menu" type="Control" parent="."]
+[node name="Launcher" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -133,8 +147,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("2_jdjj0")
 
-[node name="Background" type="ColorRect" parent="Menu"]
+[node name="Background" type="ColorRect" parent="Launcher"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_2657p")
 layout_mode = 1
@@ -147,11 +162,11 @@ color = Color(0.226707, 0.226707, 0.226707, 1)
 script = ExtResource("5_guc0b")
 fade_speed = 2.0
 
-[node name="Switch BG Timer" type="Timer" parent="Menu/Background"]
+[node name="Switch BG Timer" type="Timer" parent="Launcher/Background"]
 wait_time = 5.0
 autostart = true
 
-[node name="Blur" type="ColorRect" parent="Menu"]
+[node name="Blur" type="ColorRect" parent="Launcher"]
 material = SubResource("ShaderMaterial_u7eni")
 layout_mode = 1
 anchors_preset = 15
@@ -161,7 +176,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.75)
 
-[node name="Box" type="VBoxContainer" parent="Menu"]
+[node name="Box" type="VBoxContainer" parent="Launcher"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -172,11 +187,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="Game Picker Container" type="Control" parent="Menu/Box"]
+[node name="Carrousel Container" type="Control" parent="Launcher/Box"]
 custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
 
-[node name="Game Picker" type="Control" parent="Menu/Box/Game Picker Container"]
+[node name="Game Carrousel" type="Control" parent="Launcher/Box/Carrousel Container"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -184,27 +199,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("2_jdjj0")
 
-[node name="Spacer" type="Control" parent="Menu/Box"]
+[node name="Spacer" type="Control" parent="Launcher/Box"]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 
-[node name="Info" type="VBoxContainer" parent="Menu/Box"]
+[node name="Info" type="VBoxContainer" parent="Launcher/Box"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Title" type="Label" parent="Menu/Box/Info"]
+[node name="Title" type="Label" parent="Launcher/Box/Info"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_6pufx")
+theme_override_fonts/font = ExtResource("6_ab81d")
 theme_override_font_sizes/font_size = 64
 text = "Game Title"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="About" type="RichTextLabel" parent="Menu/Box/Info"]
+[node name="About" type="RichTextLabel" parent="Launcher/Box/Info"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(600, 0)
 layout_mode = 2
@@ -212,6 +226,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_constants/line_separation = 0
 theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
+theme_override_font_sizes/bold_italics_font_size = 24
 bbcode_enabled = true
 text = "[center](Tag)[/center]
 
@@ -219,16 +236,24 @@ Game Description..."
 fit_content = true
 scroll_active = false
 
-[node name="Credits" type="Control" parent="Menu/Box"]
+[node name="Credits Container" type="Control" parent="Launcher/Box"]
+layout_mode = 2
+
+[node name="Credits" type="Control" parent="Launcher/Box/Credits Container"]
 unique_name_in_owner = true
 clip_contents = true
-custom_minimum_size = Vector2(184, 21)
-layout_mode = 2
+custom_minimum_size = Vector2(9, 21)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 8
 script = ExtResource("7_gid56")
 delay = 0.0
 duration = 30.0
-lines = Array[String](["Hello World How Are You?", ""])
+lines = Array[String](["1", "2"])
 
 [node name="Help" type="Control" parent="."]
 unique_name_in_owner = true
@@ -270,7 +295,7 @@ theme_override_constants/separation = 32
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_fonts/font = ExtResource("4_6pufx")
+theme_override_fonts/font = ExtResource("6_ab81d")
 theme_override_font_sizes/font_size = 48
 text = "How to play [Game Name]"
 horizontal_alignment = 1
@@ -350,11 +375,17 @@ autowrap_mode = 0
 [node name="Overlay Label" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-offset_right = 149.0
-offset_bottom = 21.0
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.333)
-theme_override_constants/outline_size = 8
+anchors_preset = -1
+offset_left = 1.0
+offset_top = -3.0
+offset_right = 116.0
+offset_bottom = 16.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 4
+theme_override_fonts/font = ExtResource("6_ab81d")
 theme_override_font_sizes/font_size = 12
 text = "Game Name MM:SS"
 
-[connection signal="timeout" from="Menu/Background/Switch BG Timer" to="Menu/Box/Game Picker Container/Game Picker" method="switch_bg"]
+[connection signal="timeout" from="Launcher/Background/Switch BG Timer" to="Launcher/Box/Carrousel Container/Game Carrousel" method="switch_bg"]

@@ -8,6 +8,7 @@ class_name MusicPlayer extends AudioStreamPlayer
 var song_paths: Array[String] = []
 
 var muted := false
+var volume := 0.0
 
 
 func _ready() -> void:
@@ -25,8 +26,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	var speed := fade_out_speed if muted else fade_in_speed
-	var target_volume := -80.0 if muted else 0.0
-	volume_db = move_toward(volume_db, target_volume, speed * delta)
+	var target_volume := 0.0 if muted else 1.0
+	volume = move_toward(volume, target_volume, speed * delta)
+	volume_db = linear_to_db(volume * Config.music_volume)
 
 
 func play_song() -> void:

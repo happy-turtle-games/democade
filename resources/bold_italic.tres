@@ -1,0 +1,6 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://dv4og52wnxil5"]
+
+[ext_resource type="FontFile" uid="uid://bqx0yd5hqah4i" path="res://content/fonts/general-sans-italic.woff2" id="1_kyka2"]
+
+[resource]
+base_font = ExtResource("1_kyka2")

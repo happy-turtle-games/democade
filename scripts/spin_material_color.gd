@@ -12,8 +12,8 @@ var hue := 0.0
 
 func _process(delta: float) -> void:
 	hue += delta * speed
-	# if hue > 1.0:
-	# 	hue -= 1.0
+	if hue > 1.0:
+		hue -= 1.0
 	
 	var color := Color.from_ok_hsl(hue, saturation, lightness)
 	material.set_shader_parameter(uniform_name, color)

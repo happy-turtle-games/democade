@@ -8,7 +8,7 @@ static var current: App
 @export var time_to_quit := 1.0
 
 
-@onready var menu: Control = %"Menu"
+@onready var launcher: Launcher = %"Launcher"
 @onready var help: Control = %"Help"
 @onready var help_title: Label = %"Help Title"
 @onready var help_text: RichTextLabel = %"Help Text"
@@ -25,7 +25,6 @@ var is_game_running := false
 var active := true
 var is_help_open := false
 var is_opening_help := false
-
 var quit_timer := 0.0
 
 
@@ -34,12 +33,32 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
-	for game in GameDB.games:
-		print(game.title)
-	
 	set_active(true)
 	close_help()
 	overlay_label.hide()
+
+
+
+func _input(event: InputEvent) -> void:
+	if active: return
+	
+	if event.is_action_pressed(&"menu_home"):
+		if not is_help_open:
+			%"SFX Open".play()
+			open_help()
+			help_prompt.hide()
+			quit_bar.show()
+			is_opening_help = true
+		return
+	
+	if event.is_action_released(&"menu_home"):
+		if is_help_open and quit_timer < time_to_start_quit:
+			if is_opening_help:
+				is_opening_help = false
+				return
+			close_help()
+			%"SFX Close".play()
+		return
 
 
 func _process(delta: float) -> void:
@@ -50,33 +69,19 @@ func _process(delta: float) -> void:
 
 
 func _process_inactive(delta: float) -> void:
-	if not is_game_running:
+	if not is_game_running or not is_instance_valid(game):
 		set_active(true)
 		close_help()
 		return
+	
+	if not game.show_cursor:
+		if OS.has_feature("standalone"):
+			Input.warp_mouse(Vector2.ONE * 999999)
 	
 	game_uptime += delta
 	var minutes := int(game_uptime / 60)
 	var seconds := int(game_uptime) % 60
 	overlay_label.text = str(game.title," ",str(minutes).pad_zeros(2),":",str(seconds).pad_zeros(2))
-	
-	# Help Menu close/quit
-	if not is_help_open and Input.is_action_just_pressed(&"menu_home"):
-			%"SFX Open".play()
-			open_help()
-			help_prompt.hide()
-			quit_bar.show()
-			is_opening_help = true
-	elif (
-		is_help_open and
-		quit_timer < time_to_start_quit and
-		Input.is_action_just_released(&"menu_home")
-	):
-		if is_opening_help:
-			is_opening_help = false
-		else:
-			close_help()
-			%"SFX Close".play()
 	
 	if Input.is_action_pressed(&'menu_home') and is_help_open:
 		quit_timer += delta
@@ -98,11 +103,10 @@ func launch_game(game: Game) -> void:
 	game_uptime = 0.0
 	self.game = game
 	
-	var exec_path := game.exec\
-		.replace("./", ProjectSettings.globalize_path(game.directory))
+	var exec := PathUtil.relative_path(game.exec, ProjectSettings.globalize_path(game.directory))
 	
-	print("Launching ",exec_path," "," ".join(game.args))
-	game_pid = OS.create_process(exec_path, game.args)
+	print("Launching ",exec," "," ".join(game.args))
+	game_pid = OS.create_process(exec, game.args)
 	set_active(false)
 	
 	help_title.text = "How to play %s" % game.title
@@ -120,20 +124,25 @@ func stop_game() -> void:
 	close_help()
 	if OS.is_process_running(game_pid):
 		OS.kill(game_pid)
+	
+	game = null
 
 
 func set_active(active: bool) -> void:
 	if self.active == active: return
 	self.active = active
-	menu.visible = active
-	music_player.muted = not active and not game.continue_playing_menu_music
+	launcher.visible = active
+	launcher.process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
+	music_player.muted = not active and not game.play_music
 
 
 func open_help() -> void:
-	help.show()
 	is_help_open = true
+	help.show()
+	help.process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func close_help() -> void:
-	help.hide()
 	is_help_open = false
+	help.hide()
+	help.process_mode = Node.PROCESS_MODE_DISABLED

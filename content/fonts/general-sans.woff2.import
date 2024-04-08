@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://djbm4bcneinke"
-path="res://.godot/imported/general-sans.woff2-c0d95bb393dd4bcacb16498cdd6433f4.fontdata"
+path="res://.godot/imported/general-sans.woff2-edcc74efea97991661c479a7a0b9e58f.fontdata"
 
 [deps]
 
-source_file="res://content/general-sans.woff2"
-dest_files=["res://.godot/imported/general-sans.woff2-c0d95bb393dd4bcacb16498cdd6433f4.fontdata"]
+source_file="res://content/fonts/general-sans.woff2"
+dest_files=["res://.godot/imported/general-sans.woff2-edcc74efea97991661c479a7a0b9e58f.fontdata"]
 
 [params]
 

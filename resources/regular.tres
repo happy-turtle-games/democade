@@ -1,9 +1,9 @@
 [gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://ba68foa65lv2j"]
 
-[ext_resource type="FontFile" uid="uid://djbm4bcneinke" path="res://content/general-sans.woff2" id="1_8hc0j"]
+[ext_resource type="FontFile" uid="uid://djbm4bcneinke" path="res://content/fonts/general-sans.woff2" id="1_8hc0j"]
 
 [resource]
 base_font = ExtResource("1_8hc0j")
 variation_opentype = {
-2003265652: 400
+2003265652: 500
 }

@@ -1,6 +1,6 @@
 [gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://ca6igtx8kasfr"]
 
-[ext_resource type="FontFile" uid="uid://djbm4bcneinke" path="res://content/general-sans.woff2" id="1_hop2i"]
+[ext_resource type="FontFile" uid="uid://djbm4bcneinke" path="res://content/fonts/general-sans.woff2" id="1_hop2i"]
 
 [resource]
 base_font = ExtResource("1_hop2i")

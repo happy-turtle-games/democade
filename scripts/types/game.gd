@@ -3,9 +3,9 @@ class_name Game extends RefCounted
 
 static func from_disk(path: String) -> Game:
 	# Load Metadata
-	var meta_path := str(path,"meta.json")
+	var meta_path := path.path_join("title.json")
 	if not FileAccess.file_exists(meta_path):
-		printerr("Folder is missing ",meta_path.get_file())
+		printerr("Missing ",meta_path)
 		return null
 	
 	var metadata := FileAccess.get_file_as_string(meta_path)
@@ -16,37 +16,38 @@ static func from_disk(path: String) -> Game:
 	
 	# Load cover
 	for ext in [ "png", "webp", "jpg", "jpeg", ]:
-		game.cover_texture = try_load_image(str(path,"cover.",ext))
+		game.cover_texture = try_load_image(path.path_join("cover."+ext))
 		if game.cover_texture: break
 	
 	if not game.cover_texture:
 		printerr("No cover image found for \"",game.title,"\" (",game.id,")")
 	
-	# Load screenshots
-	var screenshots_dir := str(path,"screenshots/")
-	for screenshot_filename in DirAccess.get_files_at(screenshots_dir):
-		var screenshot_path := screenshots_dir + screenshot_filename
-		var screenshot := try_load_image(screenshot_path)
-		if not screenshot:
-			printerr("Failed to load screenshot ", screenshot_path)
+	# Load images
+	var images_dir := path.path_join("images")
+	for image_filename in DirAccess.get_files_at(images_dir):
+		var image_path := images_dir.path_join(image_filename)
+		var image := try_load_image(image_path)
+		if not image:
+			printerr("Failed to load image ", image_path)
 			continue
-		game.screenshot_textures.append(screenshot)
+		game.image_textures.append(image)
 	
 	# Load about
-	var about_path := str(path,"about.txt")
+	var about_path := path.path_join("about.txt")
 	if FileAccess.file_exists(about_path):
 		game.about = FileAccess.get_file_as_string(about_path).strip_edges()
 	else:
 		game.about = "No description provided!\nPlease create a 'about.txt' file in the game folder."
 	
 	# Load credits
-	var credits_path := str(path,"credits.txt")
+	var credits_path := path.path_join("credits.txt")
 	if FileAccess.file_exists(credits_path):
 		game.credits.assign(FileAccess.get_file_as_string(credits_path).strip_edges().split("\n"))
-		game.credits.shuffle()
+		if game.shuffle_credits:
+			game.credits.shuffle()
 	
 	# Load help
-	var help_path := str(path,"help.txt")
+	var help_path := path.path_join("help.txt")
 	if FileAccess.file_exists(help_path):
 		game.help = FileAccess.get_file_as_string(help_path).strip_edges()
 	else:
@@ -66,12 +67,15 @@ static func try_load_image(path: String) -> Texture2D:
 static func from_dict(dict: Dictionary) -> Game:
 	var game := Game.new()
 	
-	game.title = dict.get("title", "")
+	game.title = dict.get("title", "Untitled Game")
 	
-	game.continue_playing_menu_music = dict.get("continue_playing_menu_music", false)
+	game.play_music = dict.get("play_music", false)
+	game.show_cursor = dict.get("show_cursor", false)
 	
 	game.exec = dict.get("exec", "")
 	game.args.assign(dict.get("args", []))
+	
+	game.shuffle_credits = dict.get("shuffle_credits", Config.shuffle_credits)
 	
 	return game
 
@@ -84,10 +88,12 @@ var about := ""
 var credits: Array[String] = []
 var help := ""
 
-var continue_playing_menu_music := false
+var shuffle_credits := false
+var play_music := false
+var show_cursor := false
 
 var cover_texture: Texture2D
-var screenshot_textures: Array[Texture2D] = []
+var image_textures: Array[Texture2D] = []
 
 var exec := ""
 var args: Array[String] = []

@@ -1,6 +1,0 @@
-[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://dks55vxe771j8"]
-
-[ext_resource type="FontFile" uid="uid://djbm4bcneinke" path="res://content/general-sans.woff2" id="1_205cx"]
-
-[resource]
-base_font = ExtResource("1_205cx")
