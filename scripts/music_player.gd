@@ -18,7 +18,7 @@ func _ready() -> void:
 			file_name.ends_with(".ogg")
 		): continue
 		
-		song_paths.append(str(Config.music_path,file_name))
+		song_paths.append(Config.music_path.path_join(file_name))
 	
 	finished.connect(play_song)
 	play_song()
