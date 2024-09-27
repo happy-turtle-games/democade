@@ -13,7 +13,8 @@ var scale_factor := unselected_scale
 
 
 func _ready() -> void:
-	texture = game.cover_texture
+	if game.cover_texture:
+		texture = game.cover_texture
 	set_selected(false)
 	pivot_offset.x = size.x / 2.0
 	pivot_offset.y = size.y

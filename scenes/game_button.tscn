@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://btby88slxcikl"]
+[gd_scene load_steps=4 format=3 uid="uid://btby88slxcikl"]
 
 [ext_resource type="Texture2D" uid="uid://ylu8g14x6uo2" path="res://icon.png" id="2_jii13"]
 [ext_resource type="Script" path="res://scripts/game_button.gd" id="2_ti63q"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_r2l61"]
+size = Vector3(128, 64, 1)
 
 [node name="Game Button" type="TextureRect"]
 unique_name_in_owner = true
@@ -14,3 +17,30 @@ texture = ExtResource("2_jii13")
 expand_mode = 3
 stretch_mode = 5
 script = ExtResource("2_ti63q")
+
+[node name="Left Tri 1" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+
+[node name="Tri" type="MeshInstance2D" parent="Left Tri 1"]
+position = Vector2(-64, 0)
+rotation = 1.5708
+mesh = SubResource("PrismMesh_r2l61")
+
+[node name="Left Tri 2" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Tri" type="MeshInstance2D" parent="Left Tri 2"]
+position = Vector2(64, 0)
+rotation = -1.5708
+mesh = SubResource("PrismMesh_r2l61")

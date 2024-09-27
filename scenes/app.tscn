@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://bpwvs0fqynymh"]
+[gd_scene load_steps=28 format=3 uid="uid://bpwvs0fqynymh"]
 
 [ext_resource type="Script" path="res://scripts/app.gd" id="1_6jxrq"]
 [ext_resource type="FontVariation" uid="uid://ba68foa65lv2j" path="res://resources/regular.tres" id="1_56sw4"]
@@ -35,6 +35,9 @@ shader_parameter/fade = 0.0
 shader = ExtResource("3_7bucv")
 shader_parameter/blur_amount = 4.0
 shader_parameter/gray_amount = 0.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_yaxi1"]
+size = Vector3(128, 64, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rn57h"]
 shader = ExtResource("7_6wcsf")
@@ -108,12 +111,14 @@ fade_out_speed = 0.5
 unique_name_in_owner = true
 stream = ExtResource("5_f2v5b")
 volume_db = -30.0
+max_polyphony = 4
 bus = &"SFX"
 
 [node name="SFX Nav Right" type="AudioStreamPlayer" parent="Music Player"]
 unique_name_in_owner = true
 stream = ExtResource("6_s5qns")
 volume_db = -30.0
+max_polyphony = 4
 bus = &"SFX"
 
 [node name="SFX Start" type="AudioStreamPlayer" parent="Music Player"]
@@ -225,10 +230,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_constants/line_separation = 0
+theme_override_font_sizes/bold_italics_font_size = 24
+theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/normal_font_size = 24
 theme_override_font_sizes/bold_font_size = 24
-theme_override_font_sizes/italics_font_size = 24
-theme_override_font_sizes/bold_italics_font_size = 24
 bbcode_enabled = true
 text = "[center](Tag)[/center]
 
@@ -254,6 +259,38 @@ script = ExtResource("7_gid56")
 delay = 0.0
 duration = 30.0
 lines = Array[String](["1", "2"])
+
+[node name="Control" type="Control" parent="Launcher"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Left Tri 1" type="Control" parent="Launcher/Control"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+
+[node name="Tri" type="MeshInstance2D" parent="Launcher/Control/Left Tri 1"]
+position = Vector2(-64, 0)
+rotation = 1.5708
+mesh = SubResource("PrismMesh_yaxi1")
+
+[node name="Left Tri 2" type="Control" parent="Launcher/Control"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Tri" type="MeshInstance2D" parent="Launcher/Control/Left Tri 2"]
+position = Vector2(64, 0)
+rotation = -1.5708
+mesh = SubResource("PrismMesh_yaxi1")
 
 [node name="Help" type="Control" parent="."]
 unique_name_in_owner = true

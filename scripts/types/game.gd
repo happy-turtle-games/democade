@@ -3,14 +3,15 @@ class_name Game extends RefCounted
 
 static func from_disk(path: String) -> Game:
 	# Load Metadata
-	var meta_path := path.path_join("title.json")
+	var meta_path := path.path_join("title.ini")
 	if not FileAccess.file_exists(meta_path):
 		printerr("Missing ",meta_path)
 		return null
 	
-	var metadata := FileAccess.get_file_as_string(meta_path)
-	var dict: Dictionary = JSON.parse_string(metadata)
-	var game := from_dict(dict)
+	var config := ConfigFile.new()
+	config.load(meta_path)
+	
+	var game := from_config(config)
 	game.id = StringName(path.get_file())
 	game.directory = path
 	
@@ -64,18 +65,18 @@ static func try_load_image(path: String) -> Texture2D:
 	return texture
 
 
-static func from_dict(dict: Dictionary) -> Game:
+static func from_config(config: ConfigFile) -> Game:
 	var game := Game.new()
 	
-	game.title = dict.get("title", "Untitled Game")
+	game.title = config.get_value("game", "title", "Untitled Game")
+	game.exec = config.get_value("game", "exec", "")
+	game.args.assign(config.get_value("game", "args", []))
 	
-	game.play_music = dict.get("play_music", false)
-	game.show_cursor = dict.get("show_cursor", false)
+	game.play_music = config.get_value("music", "enable", false)
 	
-	game.exec = dict.get("exec", "")
-	game.args.assign(dict.get("args", []))
+	game.show_cursor = config.get_value("input", "use_mouse", false)
 	
-	game.shuffle_credits = dict.get("shuffle_credits", Config.shuffle_credits)
+	game.shuffle_credits = config.get_value("credits", "shuffle", Config.shuffle_credits)
 	
 	return game
 

@@ -2,7 +2,7 @@
 
 > _Demonstration + Arcade_
 
-A launcher+overlay for made in [Godot 4](https://godotengine.org/). Intended for demonstrating games at events. Made for a local STEAM fair showcase.
+Turn any computer into an Arcade machine to present your games at public events. Made with love using [Godot 4](https://godotengine.org). Originally made for a local STEAM fair showcase.
 
 ![Democade launcher](docs/media/launcher.png)
 
